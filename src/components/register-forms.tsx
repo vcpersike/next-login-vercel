@@ -1,4 +1,3 @@
-// src/components/RegisterForm.tsx
 'use client';
 import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -20,7 +19,7 @@ const RegisterForm = () => {
     }
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      router.push('/dashboard'); // Navigate to the dashboard after successful registration
+      router.push('/dashboard');
     } catch (error: any) {
       setError(error.message);
     }
@@ -29,7 +28,6 @@ const RegisterForm = () => {
   return (
     <div className="bg-white p-8 rounded-lg shadow-xl max-w-sm w-full">
       <form onSubmit={handleRegister} className="space-y-4">
-        {/* Form fields */}
         <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" required
                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" required
