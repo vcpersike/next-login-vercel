@@ -1,64 +1,75 @@
-"use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { registerClient } from "@/config/firebase/register-client";
-
-interface ClientFormProps {
-  onClientAdded: () => void; // Definição da prop de callback
-}
+import InputMask from 'react-input-mask';
+import Toast from "../toast/toast";
 
 const ClientForm: React.FC<ClientFormProps> = ({ onClientAdded }) => {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [category, setCategory] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    category: ""
+  });
+  const [toast, setToast] = useState({ show: false, message: '' });
+
+  const showToast = (message: string) => {
+    setToast({ show: true, message });
+    setTimeout(() => setToast({ show: false, message: '' }), 3000);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({ ...prevData, [name]: value }));
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Formulário enviado!");
 
-    const result = await registerClient({ name, phone, email, category });
+    const result = await registerClient(formData);
     if (result.success) {
-      alert(result.message);
-      setName("");
-      setPhone("");
-      setEmail("");
-      setCategory("");
+      showToast(result.message);
+      setFormData({ name: "", phone: "", email: "", category: "" });
       onClientAdded();
     } else {
-      alert(result.message);
+      showToast(result.message);
     }
   };
 
   return (
-    <div className="bg-gray-800 p-8 rounded-lg shadow-:xl w-3/4 mx-auto my-4">
+    <div className="bg-gray-800 p-8 rounded-lg shadow-xl w-3/4 mx-auto my-4">
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
           placeholder="Nome"
           required
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
-        <input
+        <InputMask
+          mask="(99) 99999-9999"
+          value={formData.phone}
+          onChange={handleInputChange}
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           type="text"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          name="phone"
           placeholder="Telefone"
           required
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
         <input
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={formData.email}
+          onChange={handleInputChange}
           placeholder="E-mail"
           required
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
         <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          name="category"
+          value={formData.category}
+          onChange={handleInputChange}
           required
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
@@ -74,6 +85,8 @@ const ClientForm: React.FC<ClientFormProps> = ({ onClientAdded }) => {
           Cadastrar Cliente
         </button>
       </form>
+      <Toast message={toast.message} show={toast.show} onClose={() => setToast({ show: false, message: '' })} />
+
     </div>
   );
 };
