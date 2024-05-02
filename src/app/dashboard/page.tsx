@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import ClientForm from "../../components/client-forms"; // Ajuste o caminho conforme necessário
-import ClientsTable from "@/components/clients-table";
-import { fetchClients } from "./api/router";
+import ClientForm from "../../components/client/client-forms"; // Ajuste o caminho conforme necessário
+import ClientsTable from "@/components/tables/clients-table";
+import { fetchClients } from "@/config/firebase/register-client";
 
 const DashboardPage = () => {
   const [clients, setClients] = useState<{ id: string }[]>([]);

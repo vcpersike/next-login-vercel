@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { cadastrarCliente } from "@/app/dashboard/api/router";
+import { registerClient } from "@/config/firebase/register-client";
 
 interface ClientFormProps {
   onClientAdded: () => void; // Definição da prop de callback
@@ -16,14 +16,14 @@ const ClientForm: React.FC<ClientFormProps> = ({ onClientAdded }) => {
     event.preventDefault();
     console.log("Formulário enviado!");
 
-    const result = await cadastrarCliente({ name, phone, email, category });
+    const result = await registerClient({ name, phone, email, category });
     if (result.success) {
       alert(result.message);
       setName("");
       setPhone("");
       setEmail("");
       setCategory("");
-      onClientAdded(); // Chama o callback após o sucesso
+      onClientAdded();
     } else {
       alert(result.message);
     }

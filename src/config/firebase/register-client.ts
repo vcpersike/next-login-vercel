@@ -1,9 +1,8 @@
-
-import { collection, addDoc, doc, query, getDocs } from 'firebase/firestore';
-import { firestore } from '../../../config/firebase-config';
+import { addDoc, collection, doc, getDocs, query } from "firebase/firestore";
+import { firestore } from "./firebase-config";
 import { v4 as uuidv4 } from 'uuid';
 
-export const cadastrarCliente = async ({ name, phone, email, category }: any) => {
+export const registerClient = async ({ name, phone, email, category }: any) => {
     try {
         const clientsCollection = collection(firestore, 'clients');
         const id = uuidv4();
